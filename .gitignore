@@ -20,7 +20,6 @@ log-ingestion.txt
 logs
 *.log
 *.mp3
-mem.sqlite3
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -95,7 +94,6 @@ instance/
 
 # Sphinx documentation
 docs/_build/
-site/
 
 # PyBuilder
 target/
@@ -158,8 +156,6 @@ vicuna-*
 
 # mac
 .DS_Store
-
-openai/
 
 # news
 CURRENT_BULLETIN.md

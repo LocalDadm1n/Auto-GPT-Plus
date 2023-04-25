@@ -10,12 +10,14 @@ from autogpt.memory.milvus import MilvusMemory
 try:
 
     class TestMilvusMemory(unittest.TestCase):
-        """Unit tests for the MilvusMemory class."""
+        """Tests for the MilvusMemory class."""
 
-        def generate_random_string(self, length: int) -> str:
+        def random_string(self, length: int) -> str:
+            """Generate a random string of the given length."""
             return "".join(random.choice(string.ascii_letters) for _ in range(length))
 
         def setUp(self) -> None:
+            """Set up the test environment."""
             cfg = Config()
             cfg.milvus_addr = "localhost:19530"
             self.memory = MilvusMemory(cfg)
@@ -34,7 +36,7 @@ try:
 
             # Add some random strings to test noise
             for _ in range(5):
-                self.memory.add(self.generate_random_string(10))
+                self.memory.add(self.random_string(10))
 
         def test_get_relevant(self) -> None:
             """Test getting relevant texts from the cache."""

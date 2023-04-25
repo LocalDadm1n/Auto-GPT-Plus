@@ -9,11 +9,9 @@ services:
     build: ./
     env_file:
       - .env
-    environment:
-      MEMORY_BACKEND: ${MEMORY_BACKEND:-redis}
-      REDIS_HOST: ${REDIS_HOST:-redis}
     volumes:
-      - ./:/app
+      - "./autogpt:/app"
+      - ".env:/app/.env"
     profiles: ["exclude-from-up"]
 
   redis:

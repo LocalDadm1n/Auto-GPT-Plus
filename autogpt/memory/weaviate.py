@@ -1,10 +1,12 @@
+import uuid
+
 import weaviate
 from weaviate import Client
 from weaviate.embedded import EmbeddedOptions
 from weaviate.util import generate_uuid5
 
-from autogpt.llm_utils import get_ada_embedding
-from autogpt.memory.base import MemoryProviderSingleton
+from autogpt.config import Config
+from autogpt.memory.base import MemoryProviderSingleton, get_ada_embedding
 
 
 def default_schema(weaviate_index):
@@ -49,7 +51,6 @@ class WeaviateMemory(MemoryProviderSingleton):
         # weaviate uses capitalised index names
         # The python client uses the following code to format
         # index names before the corresponding class is created
-        index = index.replace("-", "_")
         if len(index) == 1:
             return index.capitalize()
         return index[0].capitalize() + index[1:]

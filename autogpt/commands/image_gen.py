@@ -1,5 +1,6 @@
 """ Image Generation Module for AutoGPT."""
 import io
+import os.path
 import uuid
 from base64 import b64decode
 
@@ -7,13 +8,12 @@ import openai
 import requests
 from PIL import Image
 
-from autogpt.commands.command import command
 from autogpt.config import Config
+from autogpt.workspace import path_in_workspace
 
 CFG = Config()
 
 
-@command("generate_image", "Generate Image", '"prompt": "<prompt>"', CFG.image_provider)
 def generate_image(prompt: str, size: int = 256) -> str:
     """Generate an image from a prompt.
 
@@ -24,7 +24,7 @@ def generate_image(prompt: str, size: int = 256) -> str:
     Returns:
         str: The filename of the image
     """
-    filename = f"{CFG.workspace_path}/{str(uuid.uuid4())}.jpg"
+    filename = f"{str(uuid.uuid4())}.jpg"
 
     # DALL-E
     if CFG.image_provider == "dalle":
@@ -71,18 +71,17 @@ def generate_image_with_hf(prompt: str, filename: str) -> str:
     image = Image.open(io.BytesIO(response.content))
     print(f"Image Generated for prompt:{prompt}")
 
-    image.save(filename)
+    image.save(path_in_workspace(filename))
 
     return f"Saved to disk:{filename}"
 
 
-def generate_image_with_dalle(prompt: str, filename: str, size: int) -> str:
+def generate_image_with_dalle(prompt: str, filename: str) -> str:
     """Generate an image with DALL-E.
 
     Args:
         prompt (str): The prompt to use
         filename (str): The filename to save the image to
-        size (int): The size of the image
 
     Returns:
         str: The filename of the image
@@ -108,7 +107,7 @@ def generate_image_with_dalle(prompt: str, filename: str, size: int) -> str:
 
     image_data = b64decode(response["data"][0]["b64_json"])
 
-    with open(filename, mode="wb") as png:
+    with open(path_in_workspace(filename), mode="wb") as png:
         png.write(image_data)
 
     return f"Saved to disk:{filename}"
@@ -159,6 +158,6 @@ def generate_image_with_sd_webui(
     response = response.json()
     b64 = b64decode(response["images"][0].split(",", 1)[0])
     image = Image.open(io.BytesIO(b64))
-    image.save(filename)
+    image.save(path_in_workspace(filename))
 
     return f"Saved to disk:{filename}"
